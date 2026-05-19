@@ -5,7 +5,6 @@ const links = [
   { label: 'Home', to: '/' },
   { label: 'Collection', to: '/collection' },
   { label: 'Journal', to: '/about' },
-  { label: 'Atelier', to: '/collection' },
 ]
 
 export default function MobileMenu({ open, onClose }) {
