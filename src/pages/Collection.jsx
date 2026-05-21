@@ -110,6 +110,7 @@ export default function Collection() {
                       transition={{ duration: 0.6 }}
                       src={product.image}
                       alt={product.name}
+                      onError={(e) => { e.target.style.display = 'none' }}
                       className="h-full w-full object-cover"
                       loading="lazy"
                     />

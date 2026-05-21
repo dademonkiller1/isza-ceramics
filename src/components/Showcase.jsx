@@ -1,6 +1,7 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import products from '../data/products'
+import { getProducts } from '../api/shopify'
 
 const container = {
   hidden: {},
@@ -12,7 +13,38 @@ const itemAnim = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
 }
 
+function imgFallback(e) {
+  e.target.style.display = 'none'
+}
+
 export default function Showcase() {
+  const [products, setProducts] = useState([])
+
+  useEffect(() => {
+    let cancelled = false
+    async function fetchData() {
+      const { data } = await getProducts(6)
+      if (cancelled || !data?.products?.edges) return
+      const mapped = data.products.edges.map((e) => {
+        const node = e.node
+        const img = node.images?.edges?.[0]?.node
+        return {
+          id: node.id,
+          handle: node.handle,
+          name: node.title,
+          material: node.description?.slice(0, 60) || '',
+          price: node.priceRange.minVariantPrice.amount,
+          image: img?.url || '',
+        }
+      })
+      setProducts(mapped)
+    }
+    fetchData()
+    return () => { cancelled = true }
+  }, [])
+
+  if (products.length === 0) return null
+
   return (
     <section id="showroom" className="bg-cream-light py-20 sm:py-28 lg:py-36">
       <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
@@ -38,7 +70,7 @@ export default function Showcase() {
           viewport={{ once: true, margin: '-50px' }}
           className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {products.slice(0, 6).map((product) => (
+          {products.map((product) => (
             <motion.article key={product.id} variants={itemAnim}>
               <Link
                 to={`/product/${product.handle}`}
@@ -50,6 +82,7 @@ export default function Showcase() {
                     transition={{ duration: 0.6 }}
                     src={product.image}
                     alt={product.name}
+                    onError={imgFallback}
                     className="h-full w-full object-cover"
                     loading="lazy"
                   />
@@ -65,7 +98,7 @@ export default function Showcase() {
                     </p>
                   </div>
                   <span className="font-body text-sm font-medium text-red-600">
-                    ${product.price}
+                    ${parseFloat(product.price).toFixed(0)}
                   </span>
                 </div>
 

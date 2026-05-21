@@ -100,13 +100,14 @@ export default function CartDrawer() {
                         key={item.variantId}
                         className="flex gap-4"
                       >
-                        {item.image && (
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="h-20 w-20 shrink-0 rounded object-cover bg-navy-100"
-                          />
-                        )}
+                          {item.image && (
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              onError={(e) => { e.target.style.display = 'none' }}
+                              className="h-20 w-20 shrink-0 rounded object-cover bg-navy-100"
+                            />
+                          )}
                         <div className="flex flex-1 flex-col justify-between">
                           <div>
                             <h3 className="text-sm font-semibold text-navy-900">

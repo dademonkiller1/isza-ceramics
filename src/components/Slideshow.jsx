@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import products from '../data/products'
-
-const slides = products.slice(0, 4)
+import { getProducts } from '../api/shopify'
 
 const textVariants = {
   enter: { opacity: 0, y: 30 },
@@ -11,9 +9,58 @@ const textVariants = {
   exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
 }
 
+const imageVariants = {
+  enter: (dir) => ({
+    scale: 0.92,
+    opacity: 0,
+    x: dir > 0 ? 80 : -80,
+  }),
+  center: {
+    scale: 1,
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.7, ease: 'easeOut' },
+  },
+  exit: (dir) => ({
+    scale: 1.05,
+    opacity: 0,
+    x: dir > 0 ? -80 : 80,
+    transition: { duration: 0.5, ease: 'easeIn' },
+  }),
+}
+
+function imgFallback(e) {
+  e.target.style.display = 'none'
+}
+
 export default function Slideshow() {
+  const [slides, setSlides] = useState([])
   const [[page, direction], setPage] = useState([0, 0])
-  const index = ((page % slides.length) + slides.length) % slides.length
+
+  useEffect(() => {
+    let cancelled = false
+    async function fetchData() {
+      const { data } = await getProducts(4)
+      if (cancelled || !data?.products?.edges) return
+      const mapped = data.products.edges.map((e) => {
+        const node = e.node
+        const img = node.images?.edges?.[0]?.node
+        return {
+          id: node.id,
+          handle: node.handle,
+          name: node.title,
+          material: node.description?.slice(0, 60) || '',
+          caption: img?.altText || node.title,
+          image: img?.url || '',
+        }
+      })
+      setSlides(mapped)
+    }
+    fetchData()
+    return () => { cancelled = true }
+  }, [])
+
+  const index = slides.length > 0 ? ((page % slides.length) + slides.length) % slides.length : 0
 
   const paginate = useCallback(
     (dir) => setPage(([p]) => [p + dir, dir]),
@@ -21,29 +68,12 @@ export default function Slideshow() {
   )
 
   useEffect(() => {
+    if (slides.length === 0) return
     const timer = setInterval(() => paginate(1), 5000)
     return () => clearInterval(timer)
-  }, [paginate])
+  }, [paginate, slides.length])
 
-  const imageVariants = {
-    enter: (dir) => ({
-      scale: 0.92,
-      opacity: 0,
-      x: dir > 0 ? 80 : -80,
-    }),
-    center: {
-      scale: 1,
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.7, ease: 'easeOut' },
-    },
-    exit: (dir) => ({
-      scale: 1.05,
-      opacity: 0,
-      x: dir > 0 ? -80 : 80,
-      transition: { duration: 0.5, ease: 'easeIn' },
-    }),
-  }
+  if (slides.length === 0) return null
 
   return (
     <section className="overflow-hidden bg-white py-20 sm:py-28 lg:py-36">
@@ -64,7 +94,7 @@ export default function Slideshow() {
         </motion.div>
 
         <div className="relative">
-          <div className="relative mx-auto aspect-[4/3] max-h-[70vh] overflow-hidden rounded-sm sm:aspect-[16/9]">
+          <div className="relative mx-auto aspect-[4/3] max-h-[70vh] overflow-hidden rounded-sm bg-navy-100 sm:aspect-[16/9]">
             <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.img
                 key={slides[index].id}
@@ -75,6 +105,7 @@ export default function Slideshow() {
                 initial="enter"
                 animate="center"
                 exit="exit"
+                onError={imgFallback}
                 className="absolute inset-0 h-full w-full object-cover"
               />
             </AnimatePresence>

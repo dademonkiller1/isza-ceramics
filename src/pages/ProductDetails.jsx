@@ -111,6 +111,7 @@ export default function ProductDetails() {
             <img
               src={product.images?.[0] || ''}
               alt={product.name}
+              onError={(e) => { e.target.style.display = 'none' }}
               className="h-full w-full object-cover"
             />
           </motion.div>
