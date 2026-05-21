@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Collection from './pages/Collection'
 import About from './pages/About'
 import ProductDetails from './pages/ProductDetails'
+import CartDrawer from './components/CartDrawer'
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/product/:handle" element={<ProductDetails />} />
         </Routes>
       </Layout>
+      <CartDrawer />
     </BrowserRouter>
   )
 }

@@ -52,6 +52,13 @@ const PRODUCTS_QUERY = `
               }
             }
           }
+          variants(first: 1) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
         }
       }
     }
@@ -82,6 +89,28 @@ const PRODUCT_QUERY = `
           }
         }
       }
+      variants(first: 1) {
+        edges {
+          node {
+            id
+          }
+        }
+      }
+    }
+  }
+`
+
+const CART_CREATE_MUTATION = `
+  mutation CartCreate($input: CartInput!) {
+    cartCreate(input: $input) {
+      cart {
+        checkoutUrl
+        id
+      }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `
@@ -92,4 +121,10 @@ export async function getProducts(first = 12) {
 
 export async function getProduct(handle) {
   return shopifyFetch(PRODUCT_QUERY, { handle })
+}
+
+export async function createCart(lines) {
+  return shopifyFetch(CART_CREATE_MUTATION, {
+    input: { lines },
+  })
 }
