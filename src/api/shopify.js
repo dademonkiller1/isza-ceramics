@@ -123,8 +123,10 @@ export async function getProduct(handle) {
   return shopifyFetch(PRODUCT_QUERY, { handle })
 }
 
+const RETURN_URL = 'https://isza-ceramics.onrender.com/collection'
+
 export async function createCart(lines) {
   return shopifyFetch(CART_CREATE_MUTATION, {
-    input: { lines },
+    input: { lines, returnUrl: RETURN_URL },
   })
 }
