@@ -45,7 +45,9 @@ export default function CartDrawer() {
       clearCart()
       setCheckoutLoading(false)
       closeCart()
-      window.location.href = checkoutUrl
+      const targetUrl = new URL(checkoutUrl)
+      targetUrl.searchParams.set('return_to', 'https://isza-ceramics.onrender.com/collection')
+      window.location.href = targetUrl.toString()
     } else {
       setCheckoutError('No checkout URL returned')
       setCheckoutLoading(false)
