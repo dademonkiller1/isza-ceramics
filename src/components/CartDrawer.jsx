@@ -43,8 +43,6 @@ export default function CartDrawer() {
     const checkoutUrl = data?.cartCreate?.cart?.checkoutUrl
     if (checkoutUrl) {
       window.location.href = checkoutUrl
-    } else {
-      console.error('No checkoutUrl returned from Shopify API.')
     }
   }
 
