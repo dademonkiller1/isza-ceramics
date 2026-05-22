@@ -45,17 +45,9 @@ export default function CartDrawer() {
       clearCart()
       setCheckoutLoading(false)
       closeCart()
-      try {
-        const targetUrl = new URL(checkoutUrl)
-        targetUrl.searchParams.set('return_to', 'https://isza-ceramics.onrender.com/collection')
-        window.location.href = targetUrl.toString()
-      } catch (error) {
-        console.error('URL parsing failed, falling back to direct checkoutUrl:', error)
-        window.location.href = checkoutUrl
-      }
+      window.location.href = checkoutUrl
     } else {
-      console.error('No checkoutUrl found to redirect to.')
-      setCheckoutError('No checkout URL returned')
+      alert('Shopify API Error: Checkout URL returned empty. Please double-check your Storefront API Access Token scopes or make sure your items are assigned to the Headless sales channel.')
       setCheckoutLoading(false)
     }
   }
