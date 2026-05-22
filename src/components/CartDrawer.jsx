@@ -45,10 +45,16 @@ export default function CartDrawer() {
       clearCart()
       setCheckoutLoading(false)
       closeCart()
-      const targetUrl = new URL(checkoutUrl)
-      targetUrl.searchParams.set('return_to', 'https://isza-ceramics.onrender.com/collection')
-      window.location.href = targetUrl.toString()
+      try {
+        const targetUrl = new URL(checkoutUrl)
+        targetUrl.searchParams.set('return_to', 'https://isza-ceramics.onrender.com/collection')
+        window.location.href = targetUrl.toString()
+      } catch (error) {
+        console.error('URL parsing failed, falling back to direct checkoutUrl:', error)
+        window.location.href = checkoutUrl
+      }
     } else {
+      console.error('No checkoutUrl found to redirect to.')
       setCheckoutError('No checkout URL returned')
       setCheckoutLoading(false)
     }
