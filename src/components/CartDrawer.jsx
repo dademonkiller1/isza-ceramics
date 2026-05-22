@@ -42,13 +42,9 @@ export default function CartDrawer() {
 
     const checkoutUrl = data?.cartCreate?.cart?.checkoutUrl
     if (checkoutUrl) {
-      clearCart()
-      setCheckoutLoading(false)
-      closeCart()
       window.location.href = checkoutUrl
     } else {
-      alert('Shopify API Error: Checkout URL returned empty. Please double-check your Storefront API Access Token scopes or make sure your items are assigned to the Headless sales channel.')
-      setCheckoutLoading(false)
+      console.error('No checkoutUrl returned from Shopify API.')
     }
   }
 
