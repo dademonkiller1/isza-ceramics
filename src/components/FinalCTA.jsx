@@ -15,7 +15,7 @@ export default function FinalCTA() {
         className="absolute inset-0"
       >
         <div className="absolute inset-0 bg-navy-900/60" />
-        <img src={ctaImg} alt="" className="h-full w-full object-cover" />
+        <img src={ctaImg} alt="" onError={(e) => { e.target.style.display = 'none' }} className="h-full w-full object-cover" />
       </motion.div>
 
       <div className="relative z-10 mx-auto max-w-2xl px-6 text-center">

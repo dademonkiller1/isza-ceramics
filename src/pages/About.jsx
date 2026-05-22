@@ -39,6 +39,7 @@ export default function About() {
             <img
               src={atelierImg}
               alt="ISZA atelier workspace"
+              onError={(e) => { e.target.style.display = 'none' }}
               className="h-full w-full object-cover"
             />
           </div>
@@ -112,6 +113,7 @@ export default function About() {
                 <img
                   src={step.img}
                   alt={step.title}
+                  onError={(e) => { e.target.style.display = 'none' }}
                   className="h-full w-full object-cover"
                   loading="lazy"
                 />

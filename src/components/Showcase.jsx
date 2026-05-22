@@ -34,7 +34,7 @@ export default function Showcase() {
           name: node.title,
           material: node.description?.slice(0, 60) || '',
           price: node.priceRange.minVariantPrice.amount,
-          image: img?.url || '',
+          image: img?.url || null,
         }
       })
       setProducts(mapped)

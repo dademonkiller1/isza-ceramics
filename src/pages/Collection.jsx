@@ -22,7 +22,7 @@ function mapProduct(node) {
     name: node.title,
     material: node.description?.slice(0, 60) || '',
     price: node.priceRange.minVariantPrice.amount,
-    image: image?.url || '',
+    image: image?.url || null,
     caption: image?.altText || node.title,
     variantId: variant?.id || '',
   }

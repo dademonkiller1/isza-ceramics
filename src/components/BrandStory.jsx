@@ -23,6 +23,7 @@ export default function BrandStory() {
             <img
               src={storyImg}
               alt="Artisan hands shaping clay"
+              onError={(e) => { e.target.style.display = 'none' }}
               className="h-full w-full object-cover"
             />
           </motion.div>

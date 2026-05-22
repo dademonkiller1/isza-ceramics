@@ -51,7 +51,7 @@ export default function Slideshow() {
           name: node.title,
           material: node.description?.slice(0, 60) || '',
           caption: img?.altText || node.title,
-          image: img?.url || '',
+          image: img?.url || null,
         }
       })
       setSlides(mapped)

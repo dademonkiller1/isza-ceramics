@@ -38,7 +38,8 @@ export default function Hero() {
         <img
           src={heroImg}
           alt=""
-          className="h-full w-full object-cover"
+          onError={(e) => { e.target.style.display = 'none' }}
+          className="h-full w-full object-cover bg-navy-900"
         />
       </motion.div>
 

@@ -54,7 +54,7 @@ export default function ProductDetails() {
       variantId: product.variantId,
       name: product.name,
       price: product.price,
-      image: product.images?.[0] || '',
+      image: product.images?.[0] || null,
     })
     setAdded(true)
     setTimeout(() => setAdded(false), 2000)
@@ -109,7 +109,7 @@ export default function ProductDetails() {
             className="aspect-[4/5] overflow-hidden bg-navy-100"
           >
             <img
-              src={product.images?.[0] || ''}
+              src={product.images?.[0] || null}
               alt={product.name}
               onError={(e) => { e.target.style.display = 'none' }}
               className="h-full w-full object-cover"
