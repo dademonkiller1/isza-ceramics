@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useReducer } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useParams } from 'react-router-dom'
 import { getProduct } from '../api/shopify'
@@ -19,34 +19,40 @@ function mapProduct(node) {
   }
 }
 
+function pageReducer(state, action) {
+  switch (action.type) {
+    case 'start': return { ...state, loading: true, error: null }
+    case 'loaded': return { loading: false, error: null, product: action.product }
+    case 'error': return { loading: false, error: action.error, product: null }
+    default: return state
+  }
+}
+
 export default function ProductDetails() {
   const { handle } = useParams()
-  const [product, setProduct] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [state, dispatch] = useReducer(pageReducer, { product: null, loading: true, error: null })
   const [added, setAdded] = useState(false)
   const addItem = useCartStore((s) => s.addItem)
   const openCart = useCartStore((s) => s.openCart)
 
   useEffect(() => {
     let cancelled = false
-    setLoading(true)
-    setError(null)
+    dispatch({ type: 'start' })
 
     async function fetchData() {
       const { data, error: err } = await getProduct(handle)
       if (cancelled) return
       if (err || !data?.productByHandle) {
-        setError(err || 'Product not found')
-        setLoading(false)
+        dispatch({ type: 'error', error: err || 'Product not found' })
         return
       }
-      setProduct(mapProduct(data.productByHandle))
-      setLoading(false)
+      dispatch({ type: 'loaded', product: mapProduct(data.productByHandle) })
     }
     fetchData()
     return () => { cancelled = true }
   }, [handle])
+
+  const { product, loading, error } = state
 
   function handleAddToCart() {
     if (!product || !product.variantId) return

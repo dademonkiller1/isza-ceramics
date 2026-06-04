@@ -12,7 +12,6 @@ export default function CartDrawer() {
   const setCheckoutLoading = useCartStore((s) => s.setCheckoutLoading)
   const checkoutError = useCartStore((s) => s.checkoutError)
   const setCheckoutError = useCartStore((s) => s.setCheckoutError)
-  const clearCart = useCartStore((s) => s.clearCart)
 
   const total = items.reduce(
     (sum, item) => sum + parseFloat(item.price) * item.quantity,
